@@ -78,20 +78,32 @@ day_one :: proc(input: string)
     parse_info := make_parse_info(input);
     parse_info.search = {TokenType.Word, TokenType.Number};
 
+    ints := make([dynamic]int);
+    strings := make([dynamic]string);
+
     for 
     {
         token,ok := parse_next(&parse_info);
         if !ok do break;
-        fmt.println(token.data, token.number);
+        
+        // token.data;
+        append(&ints, token.number);
     }
 
-    // for c in input
-    // {
-    //     case '':
-    //     case '':
-    // }
-
-    fmt.println(result);
+    for a,i in ints
+    {
+        for b,j in ints
+        {
+            for c,k in ints
+            {
+                if i != j && j != k && i != k && a + b + c == 2020
+                {
+                    fmt.println(a * b * c);
+                    return;
+                }
+            }
+        }
+    }
 }
 
 
