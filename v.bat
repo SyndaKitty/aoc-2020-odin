@@ -1,0 +1,1 @@
+IF %__VCVARSALL_TARGET_ARCH%x == x (vcvarsall x64)
