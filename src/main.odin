@@ -105,26 +105,57 @@ day_one :: proc(input: string)
     }
 }
 
-
 day_two :: proc(input: string)
 {
     using parse;
     parse_info := make_parse_info(input);
     parse_info.search = {TokenType.Word, TokenType.Number};
 
-    ints := make([dynamic]int);
-    strings := make([dynamic]string);
+    valid := 0;
 
     for 
     {
-        token,ok := parse_next(&parse_info);
+        a,ok := parse_next(&parse_info);
         if !ok do break;
         
-        append(&ints, token.number);
-        append(&strings, token.data);
-    }
+        low := a.number;
 
+        b,_ := parse_next(&parse_info);
+        high := b.number;
+
+        c,_ := parse_next(&parse_info);
+        letter := c.data;
+
+        d,_ := parse_next(&parse_info);
+        word := d.data;
+
+        fmt.println(low, high, letter, word);
+
+        // count := 0;
+        // for c in word
+        // {
+        //     if c == rune(letter[0])
+        //     {
+        //         count += 1;
+        //     }
+        // }
+        // fmt.println(word, "has", count, letter[0], "against", low, "-", high, count >= low && count <= high);
+        // if count >= low && count <= high
+        // {
+        //     valid += 1;
+        // }
+
+        left := word[low-1] == u8(letter[0]);
+        right := word[high-1] == u8(letter[0]);
+        if (left && !right) || (right && !left)
+        {
+            valid += 1;
+        }
+
+    }
     
+
+    fmt.println(valid);
 }
 
 // Driver ---------------------------------------------------------//
@@ -185,7 +216,7 @@ main :: proc()
     }
     else 
     {
-        day_two();
+        day_two(input);
     }
 
     // user_input := make([]byte, 4);

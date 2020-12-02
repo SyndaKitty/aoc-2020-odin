@@ -86,7 +86,9 @@ parse_next_parameter :: proc(info: ^ParseInfo, search_data: SearchData) -> (Toke
 
         switch c
         {
-            case '0'..'9','-':
+            case '-':
+                index += 1;
+            case '0'..'9':
                 token := read_number(info);
                 if .Number in search_data do return token, true;
             case ' ':
@@ -153,7 +155,7 @@ read_number :: proc(info: ^ParseInfo) -> Token
         if index >= len(input) do return make_token(input[left:index], .Number);
         switch input[index]
         {
-            case '0'..'9','-':
+            case '0'..'9':
                 continue;
             case:
                 return make_token(input[left:index], .Number);
