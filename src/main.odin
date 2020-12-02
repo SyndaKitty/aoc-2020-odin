@@ -40,10 +40,16 @@ hash_2D :: proc(x: int, y: int) -> i64
 }
 
 
-print_binary :: proc(num: int)
+xor :: inline proc(a: bool, b: bool) -> bool
 {
-    bit_mask : int = 1 << 62;
-    i : uint = 62;
+    return (a && !b) || (b && !a);
+}
+
+
+print_binary :: proc(num: int, digits: uint)
+{
+    bit_mask : int = 1 << digits-1;
+    i : uint = digits-1;
     for
     {
         digit := (num & bit_mask) >> i;
@@ -113,50 +119,38 @@ day_two :: proc(input: string)
 
     valid := 0;
 
-    for 
+    for has_next(&parse_info)
     {
-        a,ok := parse_next(&parse_info);
-        if !ok do break;
-        
-        low := a.number;
-
-        b,_ := parse_next(&parse_info);
-        high := b.number;
-
-        c,_ := parse_next(&parse_info);
-        letter := c.data;
-
-        d,_ := parse_next(&parse_info);
-        word := d.data;
-
-        fmt.println(low, high, letter, word);
+        // 4-9 m: xvrwfmkmmmc
+        low := next_number(&parse_info);
+        next_rune(&parse_info);
+        high := next_number(&parse_info);
+        letter := rune(next_word(&parse_info)[0]);
+        word := next_word(&parse_info);
 
         // count := 0;
         // for c in word
         // {
-        //     if c == rune(letter[0])
+        //     if c == rune(letter)
         //     {
         //         count += 1;
         //     }
         // }
-        // fmt.println(word, "has", count, letter[0], "against", low, "-", high, count >= low && count <= high);
+        // fmt.println(word, "has", count, letter, "against", low, "-", high, count >= low && count <= high);
         // if count >= low && count <= high
         // {
         //     valid += 1;
         // }
 
-        left := word[low-1] == u8(letter[0]);
-        right := word[high-1] == u8(letter[0]);
-        if (left && !right) || (right && !left)
-        {
-            valid += 1;
-        }
-
+        left := word[low-1] == u8(letter);
+        right := word[high-1] == u8(letter);
+        if left ~ right do valid += 1;
     }
     
 
     fmt.println(valid);
 }
+
 
 // Driver ---------------------------------------------------------//
 read_input_file :: proc(index: int) -> (string, bool) 
