@@ -79,7 +79,6 @@ day_one :: proc(input: string)
     parse_info.search = {TokenType.Word, TokenType.Number};
 
     ints := make([dynamic]int);
-    strings := make([dynamic]string);
 
     for 
     {
@@ -106,6 +105,27 @@ day_one :: proc(input: string)
     }
 }
 
+
+day_two :: proc(input: string)
+{
+    using parse;
+    parse_info := make_parse_info(input);
+    parse_info.search = {TokenType.Word, TokenType.Number};
+
+    ints := make([dynamic]int);
+    strings := make([dynamic]string);
+
+    for 
+    {
+        token,ok := parse_next(&parse_info);
+        if !ok do break;
+        
+        append(&ints, token.number);
+        append(&strings, token.data);
+    }
+
+    
+}
 
 // Driver ---------------------------------------------------------//
 read_input_file :: proc(index: int) -> (string, bool) 
@@ -158,99 +178,109 @@ read_user_input :: proc(data: []byte, length: int) -> bool
 
 main :: proc() 
 {
-    user_input := make([]byte, 4);
-
-    for 
+    input, read_success := read_input_file(2);
+    if !read_success
     {
-        // Get user input
-        fmt.print("Enter day number of puzzle to solve: ");
-        input_err := read_user_input(user_input, 4);
-
-        if input_err
-        {
-            fmt.println("Error reading input");
-        }
-
-        // Check for attempted exit
-        lower_user_input := strings.to_lower(string(user_input));
-        if lower_user_input == "stop" || lower_user_input == "exit"
-        {
-            return;
-        }
-        delete(lower_user_input);
-
-        day_number, ok := strconv.parse_int(string(user_input));
-        if !ok 
-        {
-            fmt.println("Please enter a valid number day");
-            continue;
-        }
-
-        input, read_success := read_input_file(day_number);
-        if !read_success
-        {
-            fmt.println("Error occurred while reading input file");
-            continue;
-        }
-
-        switch (day_number)
-        {
-            case 1:
-                day_one(input);
-            // case 2:
-            //     day_two(input);
-            // case 3:
-            //     day_three(input);
-            // case 4: 
-            //     day_four(input);
-            // case 5:
-            //     day_five(input);
-            // case 6:
-            //     day_six(input);
-            // case 7:
-            //     day_seven(input);
-            // case 8:
-            //     day_eight(input);
-            // case 9:
-            //     day_nine(input);
-            // case 10:
-            //     day_ten(input);
-            // case 11:
-            //     day_eleven(input);
-            // case 12:
-            //     day_twelve(input);
-            // case 13:
-            //     day_thirteen(input);
-            // case 14:
-            //     day_fourteen(input);
-            // case 15:
-            //     day_fifteen(input);
-            // case 16:
-            //     day_sixteen(input);
-            // case 17:
-            //     day_seventeen(input);
-            // case 18:
-            //     day_eighteen(input);
-            // case 19:
-            //     day_nineteen(input);
-            // case 20:
-            //     day_twenty(input);
-            // case 21:
-            //     day_twenty_one(input);
-            // case 22:
-            //     day_twenty_two(input);
-            // case 23:
-            //     day_twenty_three(input);
-            // case 24:
-            //     day_twenty_four(input);
-            // case 25:
-            //     day_twenty_five(input);
-            case 1..25:
-                fmt.println("Day not implemented");
-            case:
-                fmt.println("Please enter a valid number day");
-        }
-
-        delete(input);
+        fmt.println("Error occurred while reading input file");
     }
+    else 
+    {
+        day_two();
+    }
+
+    // user_input := make([]byte, 4);
+
+    // for 
+    // {
+    //     // Get user input
+    //     fmt.print("Enter day number of puzzle to solve: ");
+    //     input_err := read_user_input(user_input, 4);
+
+    //     if input_err
+    //     {
+    //         fmt.println("Error reading input");
+    //     }
+
+    //     // Check for attempted exit
+    //     lower_user_input := strings.to_lower(string(user_input));
+    //     if lower_user_input == "stop" || lower_user_input == "exit"
+    //     {
+    //         return;
+    //     }
+    //     delete(lower_user_input);
+
+    //     day_number, ok := strconv.parse_int(string(user_input));
+    //     if !ok 
+    //     {
+    //         fmt.println("Please enter a valid number day");
+    //         continue;
+    //     }
+
+    //     input, read_success := read_input_file(day_number);
+    //     if !read_success
+    //     {
+    //         fmt.println("Error occurred while reading input file");
+    //         continue;
+    //     }
+
+    //     switch (day_number)
+    //     {
+    //         case 1:
+    //             day_one(input);
+    //         // case 2:
+    //         //     day_two(input);
+    //         // case 3:
+    //         //     day_three(input);
+    //         // case 4: 
+    //         //     day_four(input);
+    //         // case 5:
+    //         //     day_five(input);
+    //         // case 6:
+    //         //     day_six(input);
+    //         // case 7:
+    //         //     day_seven(input);
+    //         // case 8:
+    //         //     day_eight(input);
+    //         // case 9:
+    //         //     day_nine(input);
+    //         // case 10:
+    //         //     day_ten(input);
+    //         // case 11:
+    //         //     day_eleven(input);
+    //         // case 12:
+    //         //     day_twelve(input);
+    //         // case 13:
+    //         //     day_thirteen(input);
+    //         // case 14:
+    //         //     day_fourteen(input);
+    //         // case 15:
+    //         //     day_fifteen(input);
+    //         // case 16:
+    //         //     day_sixteen(input);
+    //         // case 17:
+    //         //     day_seventeen(input);
+    //         // case 18:
+    //         //     day_eighteen(input);
+    //         // case 19:
+    //         //     day_nineteen(input);
+    //         // case 20:
+    //         //     day_twenty(input);
+    //         // case 21:
+    //         //     day_twenty_one(input);
+    //         // case 22:
+    //         //     day_twenty_two(input);
+    //         // case 23:
+    //         //     day_twenty_three(input);
+    //         // case 24:
+    //         //     day_twenty_four(input);
+    //         // case 25:
+    //         //     day_twenty_five(input);
+    //         case 1..25:
+    //             fmt.println("Day not implemented");
+    //         case:
+    //             fmt.println("Please enter a valid number day");
+    //     }
+
+    //     delete(input);
+    // }
 }
