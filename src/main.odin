@@ -152,6 +152,25 @@ day_two :: proc(input: string)
 }
 
 
+count_trees :: proc(trees: map[i64]bool, slope_x, slope_y, max_x, max_y: int) -> int
+{
+    x := slope_x;
+    y := slope_y;
+    tree_count := 0;
+
+    for 
+    {
+        //fmt.println("Checking", x, y, trees[hash_2D(x, y)]);
+        if trees[hash_2D(x, y)] do tree_count += 1;
+        x += slope_x;
+        x %= max_x;
+        y += slope_y;
+        if y >= max_y do break;
+    }
+
+    return tree_count;
+}
+
 day_three :: proc(input: string)
 {
     using parse;
@@ -159,23 +178,42 @@ day_three :: proc(input: string)
     parse_info := make_parse_info(input);
     parse_info.search = {TokenType.Word, TokenType.Number};
 
-    for has_next(&parse_info)
-    {
-        next_number(&parse_info);
-        next_rune(&parse_info);
-        next_word(&parse_info);
-        
+    trees := make(map[i64]bool);
 
-    }
-
+    x := 0;
+    y := 0;
+    max_y := 0;
+    max_x := 0;
     for c in input
     {
         switch c
         {
-            case ' ':
-                
+            case '.':
+                trees[hash_2D(x,y)] = false;
+                x += 1;
+                max_x = x;
+            case '#':
+                trees[hash_2D(x,y)] = true;
+                x += 1;
+                max_x = x;
+            case '\n':
+                x = 0;
+                y += 1;
+                max_y = y+1;
         }
     }
+
+    fmt.println(count_trees(trees, 1, 1, max_x, max_y));
+    fmt.println(count_trees(trees, 3, 1, max_x, max_y));
+    fmt.println(count_trees(trees, 5, 1, max_x, max_y));
+    fmt.println(count_trees(trees, 7, 1, max_x, max_y));
+    fmt.println(count_trees(trees, 1, 2, max_x, max_y));
+
+    fmt.println(count_trees(trees, 1, 1, max_x, max_y)
+    * count_trees(trees, 3, 1, max_x, max_y)
+    * count_trees(trees, 5, 1, max_x, max_y)
+    * count_trees(trees, 7, 1, max_x, max_y)
+    * count_trees(trees, 1, 2, max_x, max_y));
 }
 
 
@@ -230,14 +268,14 @@ read_user_input :: proc(data: []byte, length: int) -> bool
 
 main :: proc() 
 {
-    input, read_success := read_input_file(2);
+    input, read_success := read_input_file(3);
     if !read_success
     {
         fmt.println("Error occurred while reading input file");
     }
     else 
     {
-        day_two(input);
+        day_three(input);
     }
 
     // user_input := make([]byte, 4);
