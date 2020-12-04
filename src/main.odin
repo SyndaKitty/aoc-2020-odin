@@ -217,6 +217,49 @@ day_three :: proc(input: string)
 }
 
 
+
+
+
+
+
+day_four :: proc(input: string)
+{
+    using parse;
+
+    parse_info := make_parse_info(input);
+    parse_info.search = {TokenType.Word, TokenType.Number};
+
+    ints := make([dynamic]int);
+    strings := make([dynamic]string);
+    maps := make(map[string]int);
+
+    for has_next(&parse_info)
+    {
+        next_number(&parse_info);
+        next_rune(&parse_info);
+        next_word(&parse_info);
+
+
+    }
+
+    for c in input
+    {
+        switch c
+        {
+            case ' ':
+
+        }
+    }
+    
+
+    fmt.println();
+}
+
+
+
+
+
+
 // Driver ---------------------------------------------------------//
 read_input_file :: proc(index: int) -> (string, bool) 
 {
@@ -268,14 +311,14 @@ read_user_input :: proc(data: []byte, length: int) -> bool
 
 main :: proc() 
 {
-    input, read_success := read_input_file(3);
+    input, read_success := read_input_file(4);
     if !read_success
     {
         fmt.println("Error occurred while reading input file");
     }
     else 
     {
-        day_three(input);
+        day_four(input);
     }
 
     // user_input := make([]byte, 4);
