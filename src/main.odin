@@ -217,46 +217,119 @@ day_three :: proc(input: string)
 }
 
 
+// Day 4 redacted until I can clean it up.
+// Yes it was that bad
 
 
+f :: proc(min: int, max: int) -> (omin: int, omax: int)
+{
+    range := max - min;
+    if range == 1
+    {
+        omin = min_p(min, max);
+        omax = max_p(min, max);
+    }
+    omin = min;
+    omax = max - range / 2 - 1;
+    fmt.println("f:", min, max, "->", omin, omax);
+    return;
+}
 
+b :: proc(min: int, max: int) -> (omin: int, omax: int)
+{
+    range := max - min;
+    if range == 1
+    {
+        omin = min_p(min, max);
+        omax = max_p(min, max);
+    }
+    omin = min + range / 2 + 1;
+    omax = max;
+    fmt.println("b:", min, max, "->", omin, omax);
+    return;
+}
 
+seat_id :: proc(row: int, column: int) -> int
+{
+    return row * 8 + column;
+}
 
-day_four :: proc(input: string)
+min_p :: proc(a: int, b: int) -> int
+{
+    if a < b do return a;
+    return b;
+}
+
+max_p :: proc(a: int, b: int) -> int
+{
+    if a > b do return a;
+    return b;
+}
+
+day_five :: proc(input: string)
 {
     using parse;
-
     parse_info := make_parse_info(input);
-    parse_info.search = {TokenType.Word, TokenType.Number};
+    parse_info.search = {TokenType.Word};
 
-    ints := make([dynamic]int);
-    strings := make([dynamic]string);
-    maps := make(map[string]int);
+    max_seat := 0;
+    min_seat := 999;
+    seats := make(map[int]bool);
 
     for has_next(&parse_info)
     {
-        next_number(&parse_info);
-        next_rune(&parse_info);
-        next_word(&parse_info);
-
-
-    }
-
-    for c in input
-    {
-        switch c
+        line := next_word(&parse_info);
+        min := 0;
+        max := 127;
+        for i in 0..6
         {
-            case ' ':
+            if line[i] == u8('F')
+            {
+                min,max = f(min,max);
+            }
+            else
+            {
+                min,max = b(min,max);
+            }
+        }
 
+        row := min;
+
+        min = 0;
+        max = 7;
+        for i in 7..9
+        {
+            if line[i] == u8('L')
+            {
+                min,max = f(min,max);
+            }
+            else
+            {
+                min,max = b(min,max);
+            }
+        }
+
+        col := min;
+        id := seat_id(row, col);
+        seats[id] = true;
+        if id > max_seat
+        {
+            max_seat = id;
+        }
+        if id < min_seat
+        {
+            min_seat = id;
         }
     }
-    
 
-    fmt.println();
+    for i in 32..913
+    {
+        if !(i in seats) do fmt.println(i);
+    }
+
+
+    fmt.println(min_seat, max_seat);
 }
-
-
-
 
 
 
@@ -311,14 +384,14 @@ read_user_input :: proc(data: []byte, length: int) -> bool
 
 main :: proc() 
 {
-    input, read_success := read_input_file(4);
+    input, read_success := read_input_file(5);
     if !read_success
     {
         fmt.println("Error occurred while reading input file");
     }
     else 
     {
-        day_four(input);
+        day_five(input);
     }
 
     // user_input := make([]byte, 4);
