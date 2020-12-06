@@ -335,52 +335,40 @@ day_five :: proc(input: string)
 
 day_six :: proc(input: string)
 {
-    //answers: [dynamic]map[int]bool;
-
-    num_answers := 0;
+    total := 0;
     groups := strings.split(input, "\r\n\r\n");
     
     for group in groups
     {
-        fmt.println();
         group_answers := make(map[rune]bool);
 
-        lines := strings.split(group, "\r\n");
-        
+        lines := strings.split(group, "\r\n");        
         first_line := true;
 
         for line in lines
         {
             person_answers := make(map[rune]bool);
-            fmt.println(line);
+
             for c in line
             {
-                fmt.println("  Recording", c);
                 person_answers[c] = true;
-                //fmt.println(line, c, "is present");
             }
 
             if first_line
             {
-                fmt.print("Starting with ");
                 for key,value in person_answers
                 {
-                    fmt.print(key);
                     group_answers[key] = true;
                 }
                 first_line = false;
-                fmt.println();
             }
             else
             {
                 to_remove := make([dynamic]rune);
                 for key,value in group_answers
                 {
-                    //fmt.println("  checking for", key);
-                    //fmt.println(" ", key in person_answers);
                     if !(key in person_answers)
                     {
-                        fmt.println("  Removing", key);
                         append(&to_remove, key);
                     }
                 }
@@ -391,24 +379,14 @@ day_six :: proc(input: string)
                 }
             }
         }
-        total := 0;
-        fmt.print("End value: ");
+        group_total := 0;
         for key,value in group_answers
         {
-        
-            fmt.print(key);
+            group_total += 1;
             total += 1;
-            num_answers += 1;
         }
-        fmt.println("",total);
     }
-    fmt.println(num_answers);
-
-    // Not 3522
-    // Not 3424
-    // 3360?
-
-    fmt.println();
+    fmt.println(total);
 }
 
 
