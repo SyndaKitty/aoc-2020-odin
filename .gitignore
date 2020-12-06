@@ -1,2 +1,4 @@
 build/main.exe
 src/main.exe
+src/main.obj
+src/.vs/test/v16/.suo

@@ -14,7 +14,7 @@ import "permute"
 import "parse"
 
 
-// Common functions -----------------------------------------------//
+// Common functions -----------------------------------------------
 sort_two :: proc(a: int, b: int) -> (int, int)
 {
     return min(a,b), max(a,b);
@@ -76,17 +76,43 @@ is_num :: proc(char: rune) -> bool
     return is_digit(char) || char == '-' || char == '.';
 }
 
-min :: proc(a: int, b: int) -> int
+
+iter_keys :: proc(data: map[$K]$V) -> []K
 {
-    if a < b do return a;
-    return b;
+    length := len(data);
+    result := make([dynamic]K, length);
+    i := 0;
+    for key in data
+    {
+        result[i] = key;
+        i += 1;
+    }
+    return result[:];
 }
 
-max :: proc(a: int, b: int) -> int
+iter_map :: proc(data: map[$K]$V) -> ([]K, []V)
 {
-    if a > b do return a;
-    return b;
+    length := len(data);
+    keys := make([dynamic]K, length);
+    values := make([dynamic]V, length);
+    i := 0;
+    for key,values in data
+    {
+        keys[i] = key;
+        values[i] = value;
+        i += 1;
+    }
+    return keys[:],values[:];
 }
+
+clear_map :: proc(data: ^map[$K]$V)
+{
+    for key in iter_keys(data^)
+    {
+        delete_key(data, key);
+    }
+}
+
 
 // Puzzles --------------------------------------------------------//
 day_one :: proc(input: string) 
@@ -330,9 +356,6 @@ day_five :: proc(input: string)
 
 
 
-
-
-
 day_six :: proc(input: string)
 {
     total := 0;
@@ -449,9 +472,7 @@ main :: proc()
     if !read_success
     {
         fmt.println("Error occurred while reading input file");
+        return;
     }
-    else 
-    {
-        day_six(input);
-    }
+    day_six(input);
 }
