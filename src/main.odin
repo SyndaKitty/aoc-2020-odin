@@ -76,6 +76,17 @@ is_num :: proc(char: rune) -> bool
     return is_digit(char) || char == '-' || char == '.';
 }
 
+min :: proc(a: int, b: int) -> int
+{
+    if a < b do return a;
+    return b;
+}
+
+max :: proc(a: int, b: int) -> int
+{
+    if a > b do return a;
+    return b;
+}
 
 // Puzzles --------------------------------------------------------//
 day_one :: proc(input: string) 
@@ -221,49 +232,35 @@ day_three :: proc(input: string)
 // Yes it was that bad
 
 
-f :: proc(min: int, max: int) -> (omin: int, omax: int)
+front :: proc(in_min: int, in_max: int) -> (out_min: int, out_max: int)
 {
-    range := max - min;
+    range := in_max - in_min;
     if range == 1
     {
-        omin = min_p(min, max);
-        omax = max_p(min, max);
+        out_min = min(in_min, in_max);
+        out_max = max(in_min, in_max);
     }
-    omin = min;
-    omax = max - range / 2 - 1;
-    fmt.println("f:", min, max, "->", omin, omax);
+    out_min = in_min;
+    out_max = in_max - range / 2 - 1;
     return;
 }
 
-b :: proc(min: int, max: int) -> (omin: int, omax: int)
+back :: proc(in_min: int, in_max: int) -> (out_min: int, out_max: int)
 {
-    range := max - min;
+    range := in_max - in_min;
     if range == 1
     {
-        omin = min_p(min, max);
-        omax = max_p(min, max);
+        out_min = min(in_min, in_max);
+        out_max = max(in_min, in_max);
     }
-    omin = min + range / 2 + 1;
-    omax = max;
-    fmt.println("b:", min, max, "->", omin, omax);
+    out_min = in_min + range / 2 + 1;
+    out_max = in_max;
     return;
 }
 
 seat_id :: proc(row: int, column: int) -> int
 {
     return row * 8 + column;
-}
-
-min_p :: proc(a: int, b: int) -> int
-{
-    if a < b do return a;
-    return b;
-}
-
-max_p :: proc(a: int, b: int) -> int
-{
-    if a > b do return a;
-    return b;
 }
 
 day_five :: proc(input: string)
@@ -285,11 +282,11 @@ day_five :: proc(input: string)
         {
             if line[i] == u8('F')
             {
-                min,max = f(min,max);
+                min,max = front(min,max);
             }
             else
             {
-                min,max = b(min,max);
+                min,max = back(min,max);
             }
         }
 
@@ -301,11 +298,11 @@ day_five :: proc(input: string)
         {
             if line[i] == u8('L')
             {
-                min,max = f(min,max);
+                min,max = front(min,max);
             }
             else
             {
-                min,max = b(min,max);
+                min,max = back(min,max);
             }
         }
 
@@ -329,6 +326,40 @@ day_five :: proc(input: string)
 
 
     fmt.println(min_seat, max_seat);
+}
+
+
+day_six :: proc(input: string)
+{
+    ints := make([dynamic]int);
+    strings := make([dynamic]string);
+
+    lines := strings.split(input, "\n");
+    for line in lines
+    {
+        fmt.println(line);
+    }
+
+    // using parse;
+    // parse_info := make_parse_info(input);
+    // parse_info.search = {TokenType.Word,TokenType.Number};
+    // for has_next(&parse_info)
+    // {
+    //     next_word(&parse_info);
+    //     next_number(&parse_info);
+    //     next_rune(&parse_info);
+    // }
+
+    // for c in input
+    // {
+    //     switch c 
+    //     {
+    //         case ' ': 
+
+    //     }
+    // }
+
+    fmt.println();
 }
 
 
@@ -384,109 +415,13 @@ read_user_input :: proc(data: []byte, length: int) -> bool
 
 main :: proc() 
 {
-    input, read_success := read_input_file(5);
+    input, read_success := read_input_file(6);
     if !read_success
     {
         fmt.println("Error occurred while reading input file");
     }
     else 
     {
-        day_five(input);
+        day_six(input);
     }
-
-    // user_input := make([]byte, 4);
-
-    // for 
-    // {
-    //     // Get user input
-    //     fmt.print("Enter day number of puzzle to solve: ");
-    //     input_err := read_user_input(user_input, 4);
-
-    //     if input_err
-    //     {
-    //         fmt.println("Error reading input");
-    //     }
-
-    //     // Check for attempted exit
-    //     lower_user_input := strings.to_lower(string(user_input));
-    //     if lower_user_input == "stop" || lower_user_input == "exit"
-    //     {
-    //         return;
-    //     }
-    //     delete(lower_user_input);
-
-    //     day_number, ok := strconv.parse_int(string(user_input));
-    //     if !ok 
-    //     {
-    //         fmt.println("Please enter a valid number day");
-    //         continue;
-    //     }
-
-    //     input, read_success := read_input_file(day_number);
-    //     if !read_success
-    //     {
-    //         fmt.println("Error occurred while reading input file");
-    //         continue;
-    //     }
-
-    //     switch (day_number)
-    //     {
-    //         case 1:
-    //             day_one(input);
-    //         // case 2:
-    //         //     day_two(input);
-    //         // case 3:
-    //         //     day_three(input);
-    //         // case 4: 
-    //         //     day_four(input);
-    //         // case 5:
-    //         //     day_five(input);
-    //         // case 6:
-    //         //     day_six(input);
-    //         // case 7:
-    //         //     day_seven(input);
-    //         // case 8:
-    //         //     day_eight(input);
-    //         // case 9:
-    //         //     day_nine(input);
-    //         // case 10:
-    //         //     day_ten(input);
-    //         // case 11:
-    //         //     day_eleven(input);
-    //         // case 12:
-    //         //     day_twelve(input);
-    //         // case 13:
-    //         //     day_thirteen(input);
-    //         // case 14:
-    //         //     day_fourteen(input);
-    //         // case 15:
-    //         //     day_fifteen(input);
-    //         // case 16:
-    //         //     day_sixteen(input);
-    //         // case 17:
-    //         //     day_seventeen(input);
-    //         // case 18:
-    //         //     day_eighteen(input);
-    //         // case 19:
-    //         //     day_nineteen(input);
-    //         // case 20:
-    //         //     day_twenty(input);
-    //         // case 21:
-    //         //     day_twenty_one(input);
-    //         // case 22:
-    //         //     day_twenty_two(input);
-    //         // case 23:
-    //         //     day_twenty_three(input);
-    //         // case 24:
-    //         //     day_twenty_four(input);
-    //         // case 25:
-    //         //     day_twenty_five(input);
-    //         case 1..25:
-    //             fmt.println("Day not implemented");
-    //         case:
-    //             fmt.println("Please enter a valid number day");
-    //     }
-
-    //     delete(input);
-    // }
 }
