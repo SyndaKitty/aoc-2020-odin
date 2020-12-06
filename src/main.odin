@@ -329,38 +329,90 @@ day_five :: proc(input: string)
 }
 
 
+
+
+
+
 day_six :: proc(input: string)
 {
-    ints := make([dynamic]int);
-    strings := make([dynamic]string);
+    //answers: [dynamic]map[int]bool;
 
-    lines := strings.split(input, "\n");
-    for line in lines
+    num_answers := 0;
+    groups := strings.split(input, "\r\n\r\n");
+    
+    for group in groups
     {
-        fmt.println(line);
+        fmt.println();
+        group_answers := make(map[rune]bool);
+
+        lines := strings.split(group, "\r\n");
+        
+        first_line := true;
+
+        for line in lines
+        {
+            person_answers := make(map[rune]bool);
+            fmt.println(line);
+            for c in line
+            {
+                fmt.println("  Recording", c);
+                person_answers[c] = true;
+                //fmt.println(line, c, "is present");
+            }
+
+            if first_line
+            {
+                fmt.print("Starting with ");
+                for key,value in person_answers
+                {
+                    fmt.print(key);
+                    group_answers[key] = true;
+                }
+                first_line = false;
+                fmt.println();
+            }
+            else
+            {
+                to_remove := make([dynamic]rune);
+                for key,value in group_answers
+                {
+                    //fmt.println("  checking for", key);
+                    //fmt.println(" ", key in person_answers);
+                    if !(key in person_answers)
+                    {
+                        fmt.println("  Removing", key);
+                        append(&to_remove, key);
+                    }
+                }
+
+                for remove in to_remove
+                {
+                    delete_key(&group_answers, remove);
+                }
+            }
+        }
+        total := 0;
+        fmt.print("End value: ");
+        for key,value in group_answers
+        {
+        
+            fmt.print(key);
+            total += 1;
+            num_answers += 1;
+        }
+        fmt.println("",total);
     }
+    fmt.println(num_answers);
 
-    // using parse;
-    // parse_info := make_parse_info(input);
-    // parse_info.search = {TokenType.Word,TokenType.Number};
-    // for has_next(&parse_info)
-    // {
-    //     next_word(&parse_info);
-    //     next_number(&parse_info);
-    //     next_rune(&parse_info);
-    // }
-
-    // for c in input
-    // {
-    //     switch c 
-    //     {
-    //         case ' ': 
-
-    //     }
-    // }
+    // Not 3522
+    // Not 3424
+    // 3360?
 
     fmt.println();
 }
+
+
+
 
 
 
